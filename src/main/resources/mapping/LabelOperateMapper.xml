@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.annotation.mapper.LabelOperateMapper">
+	<resultMap id="BaseResultMap"
+		type="com.annotation.pojo.LabelOperate">
+		<id column="project_id" jdbcType="INTEGER" property="projectId" />
+		<id column="label_id" jdbcType="INTEGER" property="labelId" />
+		<result column="sentence_id" jdbcType="INTEGER"
+			property="sentenceId" />
+		<result column="category_id" jdbcType="INTEGER"
+			property="categoryId" />
+		<result column="start_index" jdbcType="INTEGER"
+			property="startIndex" />
+		<result column="end_index" jdbcType="INTEGER"
+			property="endIndex" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		project_id, label_id, sentence_id, category_id,
+		start_index, end_index
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="com.annotation.pojo.LabelOperateKey"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from label_operate
+		where project_id = #{projectId,jdbcType=INTEGER}
+		and
+		label_id = #{labelId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="com.annotation.pojo.LabelOperateKey">
+		delete from label_operate
+		where project_id =
+		#{projectId,jdbcType=INTEGER}
+		and label_id =
+		#{labelId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.annotation.pojo.LabelOperate"
+		useGeneratedKeys="true" keyProperty="labelId" keyColumn="label_id">
+		insert into
+		label_operate (project_id, label_id, sentence_id,
+		category_id,
+		start_index, end_index
+		)
+		values (#{projectId,jdbcType=INTEGER},
+		#{labelId,jdbcType=INTEGER},
+		#{sentenceId,jdbcType=INTEGER},
+		#{categoryId,jdbcType=INTEGER}, #{startIndex,jdbcType=INTEGER},
+		#{endIndex,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.annotation.pojo.LabelOperate">
+		insert into label_operate
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="projectId != null">
+				project_id,
+			</if>
+			<if test="labelId != null">
+				label_id,
+			</if>
+			<if test="sentenceId != null">
+				sentence_id,
+			</if>
+			<if test="categoryId != null">
+				category_id,
+			</if>
+			<if test="startIndex != null">
+				start_index,
+			</if>
+			<if test="endIndex != null">
+				end_index,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="projectId != null">
+				#{projectId,jdbcType=INTEGER},
+			</if>
+			<if test="labelId != null">
+				#{labelId,jdbcType=INTEGER},
+			</if>
+			<if test="sentenceId != null">
+				#{sentenceId,jdbcType=INTEGER},
+			</if>
+			<if test="categoryId != null">
+				#{categoryId,jdbcType=INTEGER},
+			</if>
+			<if test="startIndex != null">
+				#{startIndex,jdbcType=INTEGER},
+			</if>
+			<if test="endIndex != null">
+				#{endIndex,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.annotation.pojo.LabelOperate">
+		update label_operate
+		<set>
+			<if test="sentenceId != null">
+				sentence_id = #{sentenceId,jdbcType=INTEGER},
+			</if>
+			<if test="categoryId != null">
+				category_id = #{categoryId,jdbcType=INTEGER},
+			</if>
+			<if test="startIndex != null">
+				start_index = #{startIndex,jdbcType=INTEGER},
+			</if>
+			<if test="endIndex != null">
+				end_index = #{endIndex,jdbcType=INTEGER},
+			</if>
+		</set>
+		where project_id = #{projectId,jdbcType=INTEGER}
+		and label_id =
+		#{labelId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.annotation.pojo.LabelOperate">
+		update label_operate
+		set sentence_id =
+		#{sentenceId,jdbcType=INTEGER},
+		category_id =
+		#{categoryId,jdbcType=INTEGER},
+		start_index =
+		#{startIndex,jdbcType=INTEGER},
+		end_index =
+		#{endIndex,jdbcType=INTEGER}
+		where project_id =
+		#{projectId,jdbcType=INTEGER}
+		and label_id =
+		#{labelId,jdbcType=INTEGER}
+	</update>
+	<delete id="deleteByProjectIdAndSentenceId"
+		parameterType="java.util.Map">
+		delete from label_operate
+		where project_id =
+		#{projectId,jdbcType=INTEGER}
+		and sentence_id =
+		#{sentenceId,jdbcType=INTEGER}
+	</delete>
+	<select id="selectByProjectIdAndSentenceId"
+		parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from label_operate
+		where project_id = #{projectId,jdbcType=INTEGER}
+		and
+		sentence_id = #{sentenceId,jdbcType=INTEGER}
+	</select>
+</mapper>

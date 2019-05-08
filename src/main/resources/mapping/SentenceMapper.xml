@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.annotation.mapper.SentenceMapper">
+	<resultMap id="BaseResultMap"
+		type="com.annotation.pojo.Sentence">
+		<id column="sentence_id" jdbcType="INTEGER" property="sentenceId" />
+		<result column="content" jdbcType="VARCHAR" property="content" />
+		<result column="start_index" jdbcType="INTEGER"
+			property="startIndex" />
+		<result column="labeled" jdbcType="INTEGER" property="labeled" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		sentence_id, content, start_index, labeled
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sentence
+		where sentence_id = #{sentenceId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from sentence
+		where sentence_id =
+		#{sentenceId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.annotation.pojo.Sentence"
+		useGeneratedKeys="true" keyProperty="sentenceId"
+		keyColumn="sentence_id">
+		insert into sentence
+		(sentence_id, content,
+		start_index,
+		labeled)
+		values
+		(#{sentenceId,jdbcType=INTEGER},
+		#{content,jdbcType=VARCHAR},
+		#{startIndex,jdbcType=INTEGER},
+		#{labeled,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.annotation.pojo.Sentence">
+		insert into sentence
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="sentenceId != null">
+				sentence_id,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="startIndex != null">
+				start_index,
+			</if>
+			<if test="labeled != null">
+				labeled,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="sentenceId != null">
+				#{sentenceId,jdbcType=INTEGER},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="startIndex != null">
+				#{startIndex,jdbcType=INTEGER},
+			</if>
+			<if test="labeled != null">
+				#{labeled,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.annotation.pojo.Sentence">
+		update sentence
+		<set>
+			<if test="content != null">
+				content = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="startIndex != null">
+				start_index = #{startIndex,jdbcType=INTEGER},
+			</if>
+			<if test="labeled != null">
+				labeled = #{labeled,jdbcType=INTEGER},
+			</if>
+		</set>
+		where sentence_id = #{sentenceId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.annotation.pojo.Sentence">
+		update sentence
+		set content =
+		#{content,jdbcType=VARCHAR},
+		start_index =
+		#{startIndex,jdbcType=INTEGER},
+		labeled = #{labeled,jdbcType=INTEGER}
+		where sentence_id = #{sentenceId,jdbcType=INTEGER}
+	</update>
+	<select id="selectSentencesByProjectId"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		s.sentence_id,s.content,s.labeled,s.start_index
+		from sentence s
+		left
+		join project_sentence ps on
+		ps.sentence_id = s.sentence_id
+		left join
+		project p on p.project_id =
+		ps.project_id
+		where ps.project_id =
+		#{projectId,jdbcType=INTEGER}
+	</select>
+</mapper>

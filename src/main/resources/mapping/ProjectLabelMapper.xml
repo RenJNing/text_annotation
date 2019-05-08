@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.annotation.mapper.ProjectLabelMapper">
+  <resultMap id="BaseResultMap" type="com.annotation.pojo.ProjectLabelKey">
+    <id column="project_id" jdbcType="INTEGER" property="projectId" />
+    <id column="label_id" jdbcType="INTEGER" property="labelId" />
+  </resultMap>
+   <sql id="Base_Column_List">
+    project_id, label_id
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="com.annotation.pojo.ProjectLabelKey">
+    delete from project_label
+    where project_id = #{projectId,jdbcType=INTEGER}
+      and label_id = #{labelId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByLabelId" parameterType="java.lang.Integer">
+    delete from project_label
+    where label_id = #{labelId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="java.util.Map" >
+    insert into project_label (project_id, label_id)
+    values (#{projectId,jdbcType=INTEGER}, #{labelId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.annotation.pojo.ProjectLabelKey">
+    insert into project_label
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        project_id,
+      </if>
+      <if test="labelId != null">
+        label_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="labelId != null">
+        #{labelId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -1,0 +1,11 @@
+spring:
+   datasource:
+      url: jdbc:mysql://localhost:3306/annotation?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      username: root
+      password: ren8997959
+      driver-class-name: com.mysql.jdbc.Driver
+      
+mybatis:
+   config-location: classpath:mybatis-config.xml
+   mapper-locations: classpath:mapping/*.xml
+   type-aliases-package: com.annotation.pojo

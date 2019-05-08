@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.annotation.mapper.ProjectMapper">
+	<resultMap id="BaseResultMap"
+		type="com.annotation.pojo.Project">
+		<id column="project_id" jdbcType="INTEGER" property="projectId" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		project_id, name
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from project
+		where project_id = #{projectId,jdbcType=INTEGER}
+	</select>
+	<select id="selectProjects" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from project
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from project
+		where project_id =
+		#{projectId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.annotation.pojo.Project"
+		useGeneratedKeys="true" keyProperty="projectId" keyColumn="project_id">
+		insert into
+		project (project_id, name)
+		values (#{projectId,jdbcType=INTEGER},
+		#{name,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.annotation.pojo.Project">
+		insert into project
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="projectId != null">
+				project_id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="projectId != null">
+				#{projectId,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.annotation.pojo.Project">
+		update project
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where project_id = #{projectId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.annotation.pojo.Project">
+		update project
+		set name = #{name,jdbcType=VARCHAR}
+		where
+		project_id = #{projectId,jdbcType=INTEGER}
+	</update>
+	<select id="exportLabels" parameterType="java.lang.Integer"
+		resultType="java.util.HashMap">
+		select
+		label_operate.label_id,label.text,label_operate.start_index+sentence.start_index
+		as start_index,label_operate.end_index+sentence.start_index as
+		end_index,substring(sentence.content,label_operate.start_index+1,label_operate.end_index-label_operate.start_index)
+		as content from label_operate left join sentence on
+		label_operate.sentence_id = sentence.sentence_id left join label on
+		label_operate.category_id=label.label_id WHERE
+		label_operate.project_id=#{projectId,jdbcType=INTEGER} ORDER BY
+		start_index
+	</select>
+	<select id="exportConnections" parameterType="java.lang.Integer"
+		resultType="java.util.HashMap">
+		select
+		connection_operate.connectionl_id,connection.text,connection_operate.from_id,connection_operate.to_id
+		from connection_operate left join connection on
+		connection_operate.category_id=connection.connection_id where
+		connection_operate.project_id=#{projectId,jdbcType=INTEGER}
+	</select>
+</mapper>

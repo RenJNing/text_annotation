@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.annotation.mapper.LabelMapper">
+	<resultMap id="BaseResultMap"
+		type="com.annotation.pojo.Label">
+		<id column="label_id" jdbcType="INTEGER" property="labelId" />
+		<result column="text" jdbcType="VARCHAR" property="text" />
+		<result column="color" jdbcType="VARCHAR" property="color" />
+		<result column="borderColor" jdbcType="VARCHAR"
+			property="bordercolor" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		label_id, text, color, borderColor
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from label
+		where label_id = #{labelId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from label
+		where label_id =
+		#{labelId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.annotation.pojo.Label"
+		useGeneratedKeys="true" keyProperty="labelId" keyColumn="label_id">
+		insert into
+		label (label_id,
+		text,
+		color,
+		borderColor)
+		values
+		(#{labelId,jdbcType=INTEGER},
+		#{text,jdbcType=VARCHAR},
+		#{color,jdbcType=VARCHAR},
+		#{bordercolor,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.annotation.pojo.Label">
+		insert into label
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="labelId != null">
+				label_id,
+			</if>
+			<if test="text != null">
+				text,
+			</if>
+			<if test="color != null">
+				color,
+			</if>
+			<if test="bordercolor != null">
+				borderColor,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="labelId != null">
+				#{labelId,jdbcType=INTEGER},
+			</if>
+			<if test="text != null">
+				#{text,jdbcType=VARCHAR},
+			</if>
+			<if test="color != null">
+				#{color,jdbcType=VARCHAR},
+			</if>
+			<if test="bordercolor != null">
+				#{bordercolor,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.annotation.pojo.Label">
+		update label
+		<set>
+			<if test="text != null">
+				text = #{text,jdbcType=VARCHAR},
+			</if>
+			<if test="color != null">
+				color = #{color,jdbcType=VARCHAR},
+			</if>
+			<if test="bordercolor != null">
+				borderColor = #{bordercolor,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where label_id = #{labelId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.annotation.pojo.Label">
+		update label
+		set text = #{text,jdbcType=VARCHAR},
+		color =
+		#{color,jdbcType=VARCHAR},
+		borderColor =
+		#{bordercolor,jdbcType=VARCHAR}
+		where label_id =
+		#{labelId,jdbcType=INTEGER}
+	</update>
+	<select id="selectLabelsByProjectId"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select l.label_id, l.text,
+		l.color, l.borderColor
+		from label l
+		left join project_label pl on
+		pl.label_id = l.label_id
+		left join project p on p.project_id =
+		pl.project_id
+		where pl.project_id = #{projectId,jdbcType=INTEGER}
+	</select>
+
+</mapper>
