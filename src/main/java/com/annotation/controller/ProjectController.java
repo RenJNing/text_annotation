@@ -44,9 +44,9 @@ public class ProjectController extends BaseController {
 		return success(projectService.selectProjects());
 	}
 
-	/* 导出数据 */
-	@RequestMapping("/exportProject")
-	public String exportProject(HttpServletRequest request, HttpServletResponse response) {
+	/* 导出标注数据Txt */
+	@RequestMapping("/exportTxt")
+	public String exportTxt(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			String projectId = request.getParameter("projectId");
 			List<HashMap<String, Object>> labelsList = projectService.exportLabels(Integer.valueOf(projectId));
@@ -77,6 +77,44 @@ public class ProjectController extends BaseController {
 				buffer.write(line.getBytes("UTF-8"));
 				buffer.write("\r\n".getBytes("UTF-8"));
 				connectionIndex++;
+			}
+			buffer.flush();
+			buffer.close();
+			outputStream.close();
+			return "下载成功";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "下载失败";
+	}
+
+	/* 导出三元组Csv */
+	@RequestMapping("/exportCsv")
+	public String exportCsv(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			String projectId = request.getParameter("projectId");
+			List<HashMap<String, Object>> labelsList = projectService.exportLabels(Integer.valueOf(projectId));
+			List<HashMap<String, Object>> connectionsList = projectService
+					.exportConnections(Integer.valueOf(projectId));
+			/* 下载文件 */
+			response.setContentType("application/force-download");// 设置强制下载不打开
+			response.addHeader("Content-Disposition",
+					"attachment;fileName=" + URLEncoder.encode("ThreeTuple.csv", "gbk"));// 设置文件名
+			ServletOutputStream outputStream = response.getOutputStream();
+			BufferedOutputStream buffer = new BufferedOutputStream(outputStream);
+			/* 写入文件 */
+			Map<Integer, Object> labelIdMap = new HashMap<>();
+			for (HashMap<String, Object> labelsMap : labelsList) {
+				labelIdMap.put((Integer) labelsMap.get("label_id"), labelsMap.get("content"));
+			}
+			buffer.write("HEAD,RELA,TAIL".getBytes("gbk"));
+			buffer.write("\r\n".getBytes("gbk"));
+			for (HashMap<String, Object> connectionsMap : connectionsList) {
+				String line = labelIdMap.get(connectionsMap.get("from_id")) + "," + connectionsMap.get("text") + ","
+						+ labelIdMap.get(connectionsMap.get("to_id"));
+				buffer.write(line.getBytes("gbk"));
+				buffer.write("\r\n".getBytes("gbk"));
 			}
 			buffer.flush();
 			buffer.close();
