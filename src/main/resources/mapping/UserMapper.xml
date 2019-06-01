@@ -103,4 +103,8 @@
         <include refid="Base_Column_List" />
         from user where user_name = #{userName,jdbcType=VARCHAR}
     </select>
+    <select
+        id="selectUsers"
+        resultMap="BaseResultMap"> select user_id, user_name, role from user
+    </select>
 </mapper>

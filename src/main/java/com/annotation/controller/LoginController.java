@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.annotation.mapper.UserMapper;
 import com.annotation.pojo.User;
+import com.annotation.service.UserService;
 import com.annotation.utils.AjaxResult;
 import com.annotation.utils.BaseController;
 
@@ -20,7 +20,7 @@ import com.annotation.utils.BaseController;
 @RequestMapping("/api")
 public class LoginController extends BaseController {
 	@Autowired
-	private UserMapper userMapper;
+	private UserService userService;
 
 	/**
 	 * 登陆
@@ -41,11 +41,26 @@ public class LoginController extends BaseController {
 		// 执行认证登陆
 		subject.login(token);
 		// 根据权限，指定返回数据
-		User user = userMapper.selectByUsername(username);
+		User user = userService.selectByUsername(username);
 		Map<String, Object> resMap = new HashMap<String, Object>();
 		resMap.put("userName", user.getUserName());
 		resMap.put("role", user.getRole());
 		return success(resMap);
+	}
+
+	@RequestMapping("/register")
+	public AjaxResult register(@RequestBody Map<String, Object> json) {
+		String username = (String) json.get("username");
+		String password = (String) json.get("password");
+		User user = userService.selectByUsername(username);
+		if (user != null) {
+			return error("该账号已存在！");
+		}
+		User record = new User();
+		record.setUserName(username);
+		record.setPassword(password);
+		record.setRole("guest");
+		return toAjax(userService.insert(record));
 	}
 
 	@RequestMapping("/logout")

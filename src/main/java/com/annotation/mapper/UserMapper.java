@@ -1,5 +1,7 @@
 package com.annotation.mapper;
 
+import java.util.List;
+
 import com.annotation.pojo.User;
 
 public interface UserMapper {
@@ -16,4 +18,6 @@ public interface UserMapper {
 	int updateByPrimaryKey(User record);
 
 	User selectByUsername(String userName);
+
+	public List<User> selectUsers();
 }
