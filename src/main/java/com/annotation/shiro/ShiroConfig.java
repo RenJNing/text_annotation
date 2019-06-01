@@ -23,12 +23,23 @@ public class ShiroConfig {
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
 		// 登陆接口，开发权限
 		filterChainDefinitionMap.put("/api/login", "anon");
+		filterChainDefinitionMap.put("/api/logout", "anon");
 		// 注册接口，开发权限
 		filterChainDefinitionMap.put("/api/register", "anon");
-		// 用户，需要角色权限 “user”
-		filterChainDefinitionMap.put("/user/**", "roles[user]");
+
+		// 普通用户，需要角色权限 “user”
+		filterChainDefinitionMap.put("/api/manual/upload", "roles[\"user,admin\"]");
+		filterChainDefinitionMap.put("/api/manual/saveAnnotation", "roles[\"user,admin\"]");
+
 		// 管理员，需要角色权限 “admin”
-		filterChainDefinitionMap.put("/admin/**", "roles[admin]");
+		filterChainDefinitionMap.put("/api/manual/deleteLabel", "roles[admin]");
+		filterChainDefinitionMap.put("/api/manual/addLabel", "roles[admin]");
+		filterChainDefinitionMap.put("/api/manual/updateLabel", "roles[admin]");
+		filterChainDefinitionMap.put("/api/manual/addConnection", "roles[admin]");
+		filterChainDefinitionMap.put("/api/manual/deleteConnection", "roles[admin]");
+		filterChainDefinitionMap.put("/api/manual/updateConnection", "roles[admin]");
+		filterChainDefinitionMap.put("/api/queryUsersList", "roles[admin]");
+		filterChainDefinitionMap.put("/api/assignRole", "roles[admin]");
 		// 其余接口一律拦截
 		// 主要这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截
 		filterChainDefinitionMap.put("/**", "authc");
@@ -36,6 +47,7 @@ public class ShiroConfig {
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 		Map<String, Filter> filterMap = shiroFilterFactoryBean.getFilters();
 		filterMap.put("authc", new MyAuthenticationFilter());
+		filterMap.put("roles", new MyAuthorizationFilter());
 
 		System.out.println("Shiro拦截器工厂类注入成功");
 		return shiroFilterFactoryBean;
